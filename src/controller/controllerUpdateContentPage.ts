@@ -4,15 +4,8 @@ const { Datastore } = require("@google-cloud/datastore");
 const path = require("path");
 require('dotenv').config({ path: path.resolve(__dirname, "../.env") });
 
-const kindContentIntro = "contact_page_content"
-const kindContentContact = "contact_page_contact" 
+const KIND = "contact_page"
 const datastore = new Datastore();
-
-interface ArrayContact {
-    image: string,
-    title: string,
-    description: string
-}
 
 const controllerUpdateContentPage = async (req: typeof Req, res: typeof Res) => {
     const {
@@ -22,28 +15,21 @@ const controllerUpdateContentPage = async (req: typeof Req, res: typeof Res) => 
     } = req.body
 
     try{
-        const taskKeyIntro = datastore.key([kindContentIntro])
-        const taskKeyContact = datastore.key([kindContentContact])
-        
-        const taskIntro = {
-            key: taskKeyIntro,
+        const query = datastore.createQuery(KIND)
+        const [entities] = await datastore.runQuery(query);
+        const keys = entities.map((entity:any) => entity[datastore.KEY]);
+        const taskKey = datastore.key(keys[0])
+        const task = {
+            key: taskKey,
             data:{
                 titleContact: titleContact,
-                introContact: introContact
+                introContact: introContact,
+                items: JSON.stringify(items)
             }
         }
 
-        await datastore.save(taskIntro)
+        await datastore.update(task)
 
-        items.map(async(item:ArrayContact) => {
-            const taskContact = {
-                key: taskKeyContact,
-                data: item
-            }
-            
-            await datastore.save(taskContact)
-
-        });
 
         res.status(200).send("update sucess.")
     }catch(err){
