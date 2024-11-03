@@ -21,7 +21,7 @@ const STATIC_UPDATE_ID = "content_page_update";
 const controllerUpdateContentPage = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { titleContact, introContact, items } = req.body;
     try {
-        const query = datastore.createQuery(KIND).filter("content_page_update", "=", STATIC_UPDATE_ID);
+        const query = datastore.createQuery(KIND).filter("content_page_id", "=", STATIC_UPDATE_ID);
         const [entities] = yield datastore.runQuery(query);
         const entityID = entities[0][datastore.KEY]['id'];
         const taskKey = datastore.key([KIND, parseInt(entityID)]);
@@ -38,7 +38,7 @@ const controllerUpdateContentPage = (req, res) => __awaiter(void 0, void 0, void
         res.status(200).send("update sucess.");
     }
     catch (err) {
-        console.log("fail to save intro!");
+        console.log(`fail to save intro! => ${err.message}`);
         res.status(500).send(err);
     }
 });

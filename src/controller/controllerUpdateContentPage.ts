@@ -15,7 +15,7 @@ const controllerUpdateContentPage = async (req: typeof Req, res: typeof Res) => 
     } = req.body
 
     try{
-        const query = datastore.createQuery(KIND).filter("content_page_update", "=", STATIC_UPDATE_ID);
+        const query = datastore.createQuery(KIND).filter("content_page_id", "=", STATIC_UPDATE_ID);
         const [entities] = await datastore.runQuery(query);
         const entityID = entities[0][datastore.KEY]['id']
         const taskKey = datastore.key([KIND, parseInt(entityID)])
@@ -31,8 +31,8 @@ const controllerUpdateContentPage = async (req: typeof Req, res: typeof Res) => 
 
         await datastore.update(task)
         res.status(200).send("update sucess.")
-    }catch(err){
-        console.log("fail to save intro!")
+    }catch(err:any){
+        console.log(`fail to save intro! => ${err.message}`)
         res.status(500).send(err)
     }
     
