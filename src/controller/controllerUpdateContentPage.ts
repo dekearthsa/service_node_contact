@@ -6,7 +6,7 @@ require('dotenv').config({ path: path.resolve(__dirname, "../.env") });
 
 const KIND = "contact_page"
 const datastore = new Datastore();
-
+const STATIC_UPDATE_ID = "content_page_update"
 const controllerUpdateContentPage = async (req: typeof Req, res: typeof Res) => {
     const {
         titleContact,
@@ -15,13 +15,14 @@ const controllerUpdateContentPage = async (req: typeof Req, res: typeof Res) => 
     } = req.body
 
     try{
-        const query = datastore.createQuery(KIND)
+        const query = datastore.createQuery(KIND).filter("content_page_update", "=", STATIC_UPDATE_ID);
         const [entities] = await datastore.runQuery(query);
-        const keys = entities.map((entity:any) => entity[datastore.KEY]);
-        const taskKey = datastore.key(keys[0])
+        const entityID = entities[0][datastore.KEY]['id']
+        const taskKey = datastore.key([KIND, parseInt(entityID)])
         const task = {
             key: taskKey,
             data:{
+                content_page_update: STATIC_UPDATE_ID,
                 titleContact: titleContact,
                 introContact: introContact,
                 items: JSON.stringify(items)
@@ -29,8 +30,6 @@ const controllerUpdateContentPage = async (req: typeof Req, res: typeof Res) => 
         }
 
         await datastore.update(task)
-
-
         res.status(200).send("update sucess.")
     }catch(err){
         console.log("fail to save intro!")
