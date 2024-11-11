@@ -22,7 +22,7 @@ const controllerUpdateContentPage = async (req: typeof Req, res: typeof Res) => 
         const task = {
             key: taskKey,
             data:{
-                content_page_update: STATIC_UPDATE_ID,
+                content_page_id: STATIC_UPDATE_ID,
                 titleContact: titleContact,
                 introContact: introContact,
                 items: JSON.stringify(items)

@@ -28,7 +28,7 @@ const controllerUpdateContentPage = (req, res) => __awaiter(void 0, void 0, void
         const task = {
             key: taskKey,
             data: {
-                content_page_update: STATIC_UPDATE_ID,
+                content_page_id: STATIC_UPDATE_ID,
                 titleContact: titleContact,
                 introContact: introContact,
                 items: JSON.stringify(items)
